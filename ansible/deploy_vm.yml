@@ -1,0 +1,19 @@
+---
+- name: Configurar y desplegar nginx en la VM
+  hosts: web
+  become: true
+
+  vars:
+    acr_login_server: "casopractico2acragarcia.azurecr.io"
+    acr_username: "{{ lookup('pipe', 'cd ../terraform && terraform output -raw acr_admin_username') }}"
+    acr_password: "{{ lookup('pipe', 'cd ../terraform && terraform output -raw acr_admin_password') }}"
+    image_name: nginx
+    image_tag: casopractico2
+    full_image_name: "{{ acr_login_server }}/{{ image_name }}:{{ image_tag }}"
+    web_user: admin
+    web_password: admin123
+
+  roles:
+    - vm_setup
+    - nginx_config
+    - nginx_deploy

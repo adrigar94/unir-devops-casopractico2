@@ -1,0 +1,16 @@
+---
+- name: Subir imagen oficial de nginx al ACR
+  hosts: localhost
+  gather_facts: true
+
+  vars:
+    acr_name: casopractico2acragarcia
+    acr_login_server: "{{ acr_name }}.azurecr.io"
+    acr_username: "{{ lookup('pipe', 'cd ../terraform && terraform output -raw acr_admin_username') }}"
+    acr_password: "{{ lookup('pipe', 'cd ../terraform && terraform output -raw acr_admin_password') }}"
+    image_name: nginx
+    image_tag: casopractico2
+    full_image_name: "{{ acr_login_server }}/{{ image_name }}:{{ image_tag }}"
+
+  roles:
+    - acr

@@ -1,0 +1,29 @@
+---
+- name: Crear carpeta HTML
+  ansible.builtin.file:
+    path: /srv/html
+    state: directory
+    mode: '0755'
+
+- name: Copiar index.html
+  ansible.builtin.copy:
+    src: index.html
+    dest: /srv/html/index.html
+    mode: '0644'
+
+- name: Copiar default.conf
+  ansible.builtin.copy:
+    src: default.conf
+    dest: /srv/default.conf
+    mode: '0644'
+
+- name: Instalar apache2-utils para htpasswd
+  ansible.builtin.package:
+    name: apache2-utils
+    state: present
+
+- name: Generar archivo .htpasswd
+  community.general.htpasswd:
+    path: /etc/nginx/.htpasswd
+    name: "{{ web_user }}"
+    password: "{{ web_password }}"

@@ -1,0 +1,24 @@
+---
+- name: Instalar podman si no está instalado
+  ansible.builtin.package:
+    name: podman
+    state: present
+  become: true
+
+- name: Login en Azure Container Registry
+  ansible.builtin.shell: >
+    podman login {{ acr_login_server }} -u {{ acr_username }} -p {{ acr_password }}
+  changed_when: false
+
+- name: Descargar imagen nginx de DockerHub
+  ansible.builtin.shell: >
+    podman pull docker.io/library/nginx:alpine
+  changed_when: false
+
+- name: Etiquetar imagen para ACR
+  ansible.builtin.shell: >
+    podman tag docker.io/library/nginx:alpine {{ full_image_name }}
+
+- name: Subir imagen al ACR
+  ansible.builtin.shell: >
+    podman push {{ full_image_name }}

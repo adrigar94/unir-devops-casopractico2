@@ -1,0 +1,25 @@
+---
+- name: Instalar podman y dependencias
+  ansible.builtin.package:
+    name:
+      - podman
+      - apache2-utils
+      - certbot
+      - python3-certbot-nginx
+    state: present
+  become: true
+
+- name: Instalar passlib desde apt
+  ansible.builtin.apt:
+    name: python3-passlib
+    state: present
+  become: true
+
+- name: Login en el ACR como azureuser
+  become: false
+  ansible.builtin.shell: >
+    podman login {{ acr_login_server }} -u {{ acr_username }} -p {{ acr_password }}
+  changed_when: false
+
+
+

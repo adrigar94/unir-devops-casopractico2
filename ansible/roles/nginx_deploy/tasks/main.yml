@@ -1,0 +1,12 @@
+---
+- name: Eliminar contenedor anterior (si existe)
+  ansible.builtin.shell: >
+    sudo podman rm -f nginx-caso2 || true
+
+- name: Lanzar contenedor con nginx desde ACR
+  ansible.builtin.shell: >
+    sudo podman run -d --name nginx-caso2 -p 80:80
+    -v /srv/html:/usr/share/nginx/html:ro
+    -v /srv/default.conf:/etc/nginx/conf.d/default.conf:ro
+    -v /etc/nginx/.htpasswd:/etc/nginx/.htpasswd:ro
+    {{ full_image_name }}
