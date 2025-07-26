@@ -24,3 +24,14 @@ output "acr_admin_password" {
   description = "Contraseña admin del ACR"
   sensitive   = true
 }
+
+output "aks_name" {
+  value       = azurerm_kubernetes_cluster.aks.name
+  description = "Nombre del clúster AKS"
+}
+
+output "aks_kube_config" {
+  value       = azurerm_kubernetes_cluster.aks.kube_config_raw
+  description = "Kubeconfig para conectarse al clúster AKS"
+  sensitive   = true
+}
